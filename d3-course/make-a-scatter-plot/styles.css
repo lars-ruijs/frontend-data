@@ -1,0 +1,22 @@
+circle {
+  fill: dodgerblue;
+  opacity: 0.3;
+}
+
+text {
+  font-size: 1.4em;
+  font-family: BlinkMacSystemFont;
+}
+
+.tick text {
+  fill: grey;
+}
+
+.tick line {
+  stroke: lightgrey;
+}
+
+text.axis-label {
+  font-size: 2em;
+  fill: grey;
+}
