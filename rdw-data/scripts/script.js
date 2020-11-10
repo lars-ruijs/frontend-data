@@ -7,19 +7,74 @@ const specsEndpoint = "https://opendata.rdw.nl/resource/b3us-f26s.json?$limit=16
 async function makeViz() {
 	// Get all the P+R Data from the RDW and store it in 'prData'
 	const prData = await getData(PenREndpoint);
-	console.log(prData);
 	
 	// Get all the Parking Specification data from the RDW and store it in 'specData'
 	const specData = await getData(specsEndpoint);
-	console.log(specData);
-
+	
+	// Make an array with areaIDs of P+R facilities (used for filtering specData) 
+	const prAreas = prData.map(a => a.areaid);
+  
+	// Filter the parking specification data to only include objects with a P+R areaID
+	const prSpecData = specData.filter(id => prAreas.includes(id.areaid));
+	
+	// Combine the P+R data with the P+R parking specification data. Store in 'combinedData'
+	const combinedData = combineData(prData, prSpecData);
+	
+	console.log(combinedData);
 }
+
+// Combine the P+R Data with the Parking Specification data
+function combineData(prData, specData) {
+
+	// First: make an array with the areaIDs of the Specification data
+	const specAreaIds = specData.map(a => a.areaid);
+	
+	// Create an empty array to store the combined data in
+	const combinedData = [];
+  
+	// For every item of the P+R Data array, create an object with the combined data
+	for (const object in prData) {
+	  
+	// Get the index-number of a Parking Specification object belonging to the current P+R areaID.  
+	const index = specAreaIds.indexOf(prData[object].areaid);
+	  
+	// If necessary: check if the object key exists and has a value, if not set value as null. 
+	// Thanks to Laurens' lecture about checking if data is valid
+	const newObject = {
+		areaId: prData[object].areaid, 
+		name: prData[object].areadesc ? prData[object].areadesc : null,
+		lat: prData[object].location ? +prData[object].location.latitude : null,
+		lon: prData[object].location ? +prData[object].location.longitude : null,
+		city: prData[object].areadesc ? getCityName(prData[object].areadesc) : null,
+		openingYear: prData[object].startdataarea ? getYear(prData[object].startdataarea) : null, 
+		capacity: specData[index] ? +specData[index].capacity : null
+	};  
+	  
+	// Push the objects to the array 
+	combinedData.push(newObject);
+
+	}
+	return combinedData;
+}
+
+// Extract the years from a string that is formated as YYYYMMDD
+// Used substring() documentation from MDN https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/substring
+function getYear(yyyymmdd) {
+	return +yyyymmdd.substring(0, 4);
+}
+
+// Extract the cityname from the parentheses
+// RegEx code adapted from https://stackoverflow.com/questions/17779744/regular-expression-to-get-a-string-between-parentheses-in-javascript
+function getCityName(parkingName) {
+	return /\(([^)]+)\)/.exec(parkingName)[1];
+}
+
 // Fetch data from given url and convert the body of the response to JSON using d3.json
 // Thanks to Laurens' lecture about fetching data and using async functions
 async function getData(url) {
 	const data = await d3.json(url);
 	return data;
-  }
+}
 
 ///////////////
 // OLD CODE //
