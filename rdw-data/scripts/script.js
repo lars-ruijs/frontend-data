@@ -5,22 +5,22 @@ const PenREndpoint = "https://opendata.rdw.nl/resource/6wzd-evwu.json";
 const specsEndpoint = "https://opendata.rdw.nl/resource/b3us-f26s.json?$limit=1600";
 
 async function makeViz() {
-	// Get all the P+R Data from the RDW and store it in 'prData'
+	// Get all the P+R data and Parking Specification data from the RDW
 	const prData = await getData(PenREndpoint);
-	
-	// Get all the Parking Specification data from the RDW and store it in 'specData'
 	const specData = await getData(specsEndpoint);
 	
 	// Make an array with areaIDs of P+R facilities (used for filtering specData) 
 	const prAreas = prData.map(a => a.areaid);
-  
 	// Filter the parking specification data to only include objects with a P+R areaID
 	const prSpecData = specData.filter(id => prAreas.includes(id.areaid));
 	
 	// Combine the P+R data with the P+R parking specification data. Store in 'combinedData'
 	const combinedData = combineData(prData, prSpecData);
-	
-	console.log(combinedData);
+
+	// Get all the P+R city names in an array
+	const cities = combinedData.map(a => a.city);
+	// Get the number of P+R facilities per city + coordinates of the city and store it in 'cityData'
+	const cityData = await getCityData(cities);
 }
 
 // Combine the P+R Data with the Parking Specification data
@@ -55,6 +55,41 @@ function combineData(prData, specData) {
 
 	}
 	return combinedData;
+}
+
+function getCityData(cities) {
+	// Count city names, remove duplicates and use 'getCoordinates' to get the lat and lng
+	// Code adapted from: https://stackoverflow.com/questions/49676897/javascript-es6-count-duplicates-to-an-array-of-objects
+  
+	// Acc is the accumulator. The value that gets returned.
+	// City is the name of a city (the current value)
+	// First: set a city name to contain an array with the city name and 0
+	// Then: add 1 to the number (number is in the second place of the array)
+	// Object.values returns an array with the values of an object (so here: an array with arrays)
+	// Map loops over the arrays and returns an array with objects.
+	const result = Object.values(cities.reduce((acc, city) => {
+		acc[city] = acc[city] || [city, 0];
+		acc[city][1]++;
+		return acc;
+	},{})).map(async object=> {
+		const coor = await getCoordinates(object[0]);
+		return {
+			city: object[0], 
+			prLocations: object[1],
+			...coor
+		};
+	});
+  
+	// Use Promise.all when using await inside map()
+	// Code adapted from: https://zellwk.com/blog/async-await-in-loops/
+	return Promise.all(result);
+}
+
+// Use HERE Maps API Geocoding to get latitude and longitude coordinates for a city name
+async function getCoordinates(cityName) {
+	const geo = await getData(`https://geocode.search.hereapi.com/v1/geocode?apiKey=B1CkIQ-gETJxbw3X00kk3YE0S2gkkODYpcBk_Nl2Bf4&q=${cityName},%20NL`);
+	
+	return geo.items[0] ? geo.items[0].position : {lat: null, lng: null};
 }
 
 // Extract the years from a string that is formated as YYYYMMDD
