@@ -1,13 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html>
+  <head>
+    <title>RDW Data Visualization</title>
+    <link rel="stylesheet" href="styles/styles.css" />
     <script src="https://unpkg.com/d3@6.2.0/dist/d3.min.js"></script>
-    <title>RDW-Data</title>
-</head>
+  </head>
 <body>
-    <h1>RDW Data</h1>
-    <script src="scripts/script.js"></script>
-</body>
+    <h1>Hoe is de P+R parkeercapaciteit in steden verdeeld?</h1>
+    <p>
+        Klik op de staaf van een stad om te zien hoe het aantal parkeerplaatsen van de P+R locaties binnen die stad is verdeeld. 
+    </p>
+    <p>
+        Er worden alleen steden getoond met minimaal 3 en maximaal 10 P+R locaties. Bron data: <a href="https://opendata.rdw.nl/" target="_blank">RDW</a>.
+    </p>
+    <div class="charts"></div>    
+  <script src="scripts/script.js"></script>
+  </body>
 </html>
