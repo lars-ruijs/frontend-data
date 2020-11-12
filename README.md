@@ -6,6 +6,19 @@ More information about De Volkskrant can be found at [Wikipedia (English)](https
 
 All of the RDW datasets can be found [here](https://opendata.rdw.nl/browse).
 
+## 📊 Visualization
+
+![image](https://user-images.githubusercontent.com/60745347/98987259-5598e300-2526-11eb-9f01-7aef6205d33e.png)
+
+I created an interactive visualization that shows how the P+R parking capacity is distributed in cities. When you press a bar from the barchart, a pie chart shows how the number of parking spaces of the P+R locations within that city is distributed. View the visualization [here](https://lars-ruijs.github.io/frontend-data/rdw-data/).
+
+I've used sources below as an example:
+
+- **Making a bar chart with D3** YouTube video by Curran Kelleher. View the video [here](https://www.youtube.com/watch?v=NlBt-7PuaLk&list=PL9yYRbwpkykvOXrZumtZWbuaXWHvjD8gi&index=7).
+- **Customizing Axes of a bar chart** YouTube video by Curran Kelleher. View the video [here](https://www.youtube.com/watch?v=c3MCROTNN8g&list=PL9yYRbwpkykvOXrZumtZWbuaXWHvjD8gi&index=9).
+- **Interactive Pie chart** an example from D3 Graph Gallery. View the example [here](https://www.d3-graph-gallery.com/graph/pie_changeData.html).
+- **Pie chart with annotation** an example from D3 Graph Gallery. View the example [here](https://www.d3-graph-gallery.com/graph/pie_annotation.html)
+
 ## 💡 Concept
 
 ### 🔎 Research question
