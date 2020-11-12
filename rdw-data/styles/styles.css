@@ -1,0 +1,41 @@
+h1,
+p,
+text {
+  font-family: BlinkMacSystemFont, sans-serif;
+}
+
+h1 {
+  margin: 1em 0 0 1em;
+  color: #1873cc;
+}
+
+p {
+  margin: 1em 0 0 2em;
+}
+
+p:last-of-type {
+  margin-top: 0.5em;
+  color: grey;
+}
+
+g text.axis-label {
+  font-size: 1.5em;
+  fill: grey;
+}
+
+.tick text {
+  font-size: 1.3em;
+  color: #0f487f;
+}
+
+.pie text {
+  fill: white;
+}
+
+path.domain {
+  stroke: #a5d2ff;
+}
+
+.tick line {
+  stroke: #a5d2ff;
+}
