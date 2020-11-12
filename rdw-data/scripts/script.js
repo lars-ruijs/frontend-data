@@ -111,22 +111,3 @@ async function getData(url) {
   const data = await d3.json(url);
   return data;
 }
-
-//PR DATA OBJECT
-  //areadesc: "P+R Hemriksein (Leeuwarden)"
-  //areaid: "80_PRHEM"
-  //areamanagerid: "80"
-  //enddataarea: "29991231"
-  //location: {latitude: "53.165117644", longitude: "5.829843478", human_address: "{"address": "", "city": "", "state": "", "zip": ""}"}
-  //startdataarea: "20150728"
-  //usageid: "PARKRIDE"
-
-//SPECS DATA OBJECT
-  //areaid: "599_KRZM"
-  //areamanagerid: "599"
-  //capacity: "1700"
-  //chargingpointcapacity: "4"
-  //disabledaccess: "0"
-  //enddatespecifications: "20991231235959"
-  //maximumvehicleheight: "0"
-  //startdatespecifications: "20141101000000"
