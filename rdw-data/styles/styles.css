@@ -1,3 +1,18 @@
+footer {
+  padding: 1em 1vw 2em 1vw;
+  text-align: center;
+  background-color: #0f487f;
+  color: white;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+footer a {
+  color: white;
+}
+
 h1,
 p,
 text {
@@ -13,7 +28,7 @@ p {
   margin: 1em 0 0 2em;
 }
 
-p:last-of-type {
+p:nth-child(3) {
   margin-top: 0.5em;
   color: grey;
 }
