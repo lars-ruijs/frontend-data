@@ -17,15 +17,15 @@ With my data visualization I want to address the following topic:
 With this question I have thought of several subquestions, which focus more deeply on the subject of Park & Ride locations.
 
 - How far are the P+R locations from the city center?
-- Which municipality has the most P+R locations?
-- What are the largest P+R locations in the Netherlands?
+- Which city has the most P+R locations?
+- How large is the parking capacity of these locations?
 - Do the P+R locations offer facilities for the disabled?
 - Are the number of P+R locations in the Netherlands increasing?
 - Which P+R locations offer a connection to a train station?
 
 ### 💭 Assumptions
 
-I don't expect small towns to have a P+R location. I expect that the bigger the city, the further away a park and ride location is from the city center. I think the city of Amsterdam has the most P+R locations. I expect that commercial providers hardly own any P+R locations. I expect that most P+R locations have a train station within walking distance.
+I don't expect small towns to have a P+R location. I expect that the bigger the city, the further away a park and ride location is from the city center. I think the city of Amsterdam has the most P+R locations with a high parking capacity. I expect that commercial providers hardly own any P+R locations. I expect that most P+R locations have a train station within walking distance.
 
 ### 📊 Interesting variables
 
@@ -88,11 +88,25 @@ When calculating the difference between the first departure time and the last ar
 
 ### ⬜️ Empty values
 
-When a dataset contains empty values, I will either not use the empty cells or interpert the value in a cell as 0. This depends of course on what the subject of the corresponding column is. If I encounter empty cells I will describe here what I have done with the empty cells and why.
+When a dataset contains empty values, I will either not use the empty cells or interpert the value in a cell as null. This depends of course on what the subject of the corresponding column is. Below are the empty values I came across and what I did with them:
+
+- Inside the dataset [PenR GEO](https://opendata.rdw.nl/Parkeren/GEO-PenR/6wzd-evwu), there was one P+R location without an `AreaDesc` (the name of a P+R location plus the city name). Because of this, I put the name as `null` and the place name as `null` as well.
+
+- About 54 `areaId`s (unique identification numbers) of P+R locations were missing from the dataset [Specificaties Parkeergebied](https://opendata.rdw.nl/Parkeren/Open-Data-Parkeren-SPECIFICATIES-PARKEERGEBIED/b3us-f26s). This means, among other things, that I can't get any information about parking capacity from them. I set the capacity of these locations to 1, because I need the capacity to create a pie chart. In this way, the missing capacities are still visible and D3 can work with them.
+
+I haven't come across any other missing data, but I have specified in my code that if there are missing values, they will be replaced for null.
 
 ### ✏️ Sketch of my concept (so far)
 
-I would like to visualise the spread of P+R locations across the country and show the distance between a city centre and a P+R location. The first example below is without a map background. The other sketches do have a simple map as background, because I think this helps to visualize the spread of P+R locations over smaller places in the country.
+I would like to visualise the spread of P+R locations across the country and show the distance between a city centre and a P+R location. The first example below is without a map background. The other sketches do have a simple map as background, because I think this helps to visualize the spread of P+R locations over smaller places in the country. <br><br>
+After receiving feedback from de Volkskrant, I decided to first make a general visualization of P+R parking capacity divided over cities. See the sketch below:
+
+<br>
+
+![IMG_2763](https://user-images.githubusercontent.com/60745347/98966364-799afb00-250b-11eb-831c-aa601fff6762.JPG)
+
+Here a user selects a bar from the barchart to get a pie chart with more information on how the P+R parking capacity is distributed in the selected city.
+
 <br>
 
 ![schets zonder kaart als achtergrond](https://user-images.githubusercontent.com/60745347/97630497-fe781600-1a2f-11eb-847f-fdda331a2977.JPG)
@@ -105,13 +119,13 @@ Sketch with the option to filter displayed P+R facilities by travel time for the
 
 <br>
 
-<img src="https://user-images.githubusercontent.com/60745347/98243811-c3656d80-1f6e-11eb-883d-a8557f75133b.png" alt="digitale schets" width="80%" />
+<img src="https://user-images.githubusercontent.com/60745347/98243811-c3656d80-1f6e-11eb-883d-a8557f75133b.png" alt="digitale schets" width="70%" />
 
 Digital sketch based on the second draft.
 
 <br>
 
-## 🛁 Data cleaning with functional patterns
+## 🛁 Survey data cleaning with functional patterns
 
 This function cleans the coordinates in the column "place of birth". First of all, an array is created with `map()` of the values in the column. This array is directly filtered on empty values using `filter()`. Then a function checks if the coordinates need to be converted from the "degree, minute and seconds"-format to a decimal format. If so, it does so and places the result as an object in a new array. If the coordinate doesn't have to get converted, weird characters will be filtered out and the string coordinates will be cut into an object with a lattitude and longitude. This object is placed back in the array.
 Finally the function removes 11 invalid coordinates. These are for example coordinates with invalid degree indicators or coordinates that only contain a lattitude (or longitude).
@@ -132,6 +146,25 @@ I've used the following sources while working on my project:
 - **Replacing quotes and degree characters** adapted RegEx code from a StackOverflow [answer](https://stackoverflow.com/questions/7760262/replace-both-double-and-single-quotes-in-javascript-string) by Joe.
 - **Using `test()` to check if a string contains letters** code adapted from a StackOverflow [answer](https://stackoverflow.com/questions/23476532/check-if-string-contains-only-letters-in-javascript/23476587) by Oriol. Used additional `test()` [documentation](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/test) from MDN.
 - **Convert coordinates in Degree, Minute, Seconds format to decimal values** code adapted from a StackOverflow [answer](https://stackoverflow.com/questions/1140189/converting-latitude-and-longitude-to-decimal-values) by Gavin Miller.
+
+### RDW data cleaning
+
+- **Dataset GEO P&R** from the RDW. View the dataset [here](https://opendata.rdw.nl/Parkeren/GEO-PenR/6wzd-evwu).
+- **Dataset Specificaties Parkeergebied** from the RDW. View the dataset [here](https://opendata.rdw.nl/Parkeren/Open-Data-Parkeren-SPECIFICATIES-PARKEERGEBIED/b3us-f26s).
+- **Geocoding API** powered by HERE Maps. Used for finding coordinate data from city names. Learn more about the API [here](https://developer.here.com/documentation/geocoding-search-api/dev_guide/topics/endpoint-geocode-brief.html).
+- **Counting duplicate values and removing the duplicates** code adapted from from a StackOverflow [answer](https://stackoverflow.com/questions/49676897/javascript-es6-count-duplicates-to-an-array-of-objects) by Eddie.
+- **Using async/await inside map** code adapted from an article by [Zell Liew](https://zellwk.com/blog/async-await-in-loops/).
+- **Check if data is valid** a lecture by Tech Track teacher Laurens.
+- **Extract years from a string** used documentation about substring() from [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/substring).
+- **Extraxt text between parentheses** RegEx code adapted from a StackOverflow [answer](https://stackoverflow.com/questions/17779744/regular-expression-to-get-a-string-between-parentheses-in-javascript) by go-oleg.
+- **Fetching data and coverting to JSON** a lecture by Tech Track teacher Laurens.
+
+### Making a D3 visualization
+
+- **Making a bar chart with D3** YouTube video by Curran Kelleher. View the video [here](https://www.youtube.com/watch?v=NlBt-7PuaLk&list=PL9yYRbwpkykvOXrZumtZWbuaXWHvjD8gi&index=7).
+- **Customizing Axes of a bar chart** YouTube video by Curran Kelleher. View the video [here](https://www.youtube.com/watch?v=c3MCROTNN8g&list=PL9yYRbwpkykvOXrZumtZWbuaXWHvjD8gi&index=9).
+- **Interactive Pie chart** an example from D3 Graph Gallery. View the example [here](https://www.d3-graph-gallery.com/graph/pie_changeData.html).
+- **Pie chart with annotation** an example from D3 Graph Gallery. View the example [here](https://www.d3-graph-gallery.com/graph/pie_annotation.html)
 
 ## 🔗 License
 
